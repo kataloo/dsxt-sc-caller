@@ -1,5 +1,5 @@
-const fs = require('fs');
-const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+// const fs = require('fs');
+// const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 const Web3 = require('web3');
 const web3 = new Web3(
@@ -9,13 +9,13 @@ const web3 = new Web3(
 const rinkebyChainId = 4;
 
 const abi = require('./abi').abi;
-const contract = new web3.eth.Contract(abi, config.contractAddress);
+const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
 
 const privateKeyToAccount = pk => {
     return web3.eth.accounts.privateKeyToAccount('0x' + pk);
 }
 
-const account = privateKeyToAccount(config.privateKey);
+const account = privateKeyToAccount(process.env.PRIVATE_KEY);
 
 const runContractFunction = async (data) => {
     console.log('calling from account address:', account.address)
@@ -24,7 +24,7 @@ const runContractFunction = async (data) => {
     console.log('nonce is: ', nonce);
     const rawTransaction = {
         from: account.address,
-        to: config.contractAddress,
+        to: process.env.CONTRACT_ADDRESS,
         value: '0x0',
         data: data,
         chainId: rinkebyChainId,
@@ -35,7 +35,7 @@ const runContractFunction = async (data) => {
 
     console.log('calculated estimate gas')
 
-    const signedTx = await web3.eth.accounts.signTransaction(rawTransaction, config.privateKey)
+    const signedTx = await web3.eth.accounts.signTransaction(rawTransaction, process.env.PRIVATE_KEY)
     const result = await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
     console.log('send tx result: ' + JSON.stringify(result))
     return result;
