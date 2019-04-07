@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
-const port = config.serverPort;
+const port = process.env.PORT || 5000;
 
 app.post('/execute_exchange', async (req, res) => {
     const tradeData = req.body;
