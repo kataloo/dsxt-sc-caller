@@ -6,10 +6,14 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// const fs = require('fs');
-// const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+const fs = require('fs');
+const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
-const port = process.env.PORT || 5000;
+const port = config.serverPort;
+
+app.get('/', (req, res) => {
+    res.send('dsxt server ok');
+})
 
 app.post('/execute_exchange', async (req, res) => {
     const tradeData = req.body;
